@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_IMAGE = 'your-dockerhub-jaividhuu021/node-app-image'
+        DOCKER_HUB_CREDENTIALS = 'dockerhub-creds'  
+        GITHUB_REPO = 'https://github.com/jainvidhuu21/node-app.git'  
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Pull the latest code from the GitHub repository
+                git branch: 'main', url: "${GITHUB_REPO}"
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    docker.build("${DOCKER_IMAGE}")
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        // Push the Docker image to Docker Hub
+                        docker.image("${DOCKER_IMAGE}").push()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Docker image built and pushed to Docker Hub successfully.'
+        }
+        failure {
+            echo 'Something went wrong. Please check the logs for errors.'
+        }
+    }
+}

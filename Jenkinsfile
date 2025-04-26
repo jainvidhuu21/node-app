@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_CREDENTIALS = credentials('docker-hub-credentials') 
+        DOCKER_CREDENTIALS = credentials('b80c6f14-b38b-4217-b171-d599eaf08454') 
         IMAGE_NAME = 'jainvidhuu21/node-app' 
         TAG = 'latest' 
     }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Log in to Docker Hub using credentials
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_CREDENTIALS) {
+                    docker.withRegistry('https://registry.hub.docker.com', b80c6f14-b38b-4217-b171-d599eaf08454) {
                         // Push the Docker image to Docker Hub
                         docker.image("${IMAGE_NAME}:${TAG}").push()
                     }
